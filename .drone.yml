@@ -1,0 +1,10 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build
+    pull: if-not-exists
+    image: golang:alpine
+    commands:
+      - go build gitcz.go
