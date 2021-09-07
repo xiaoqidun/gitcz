@@ -1,7 +1,7 @@
 # gitcz
 Golang版本Git Commitizen，commit规范工具
 # 快速安装
-go get -u github.com/xiaoqidun/gitcz
+go install github.com/xiaoqidun/gitcz@latest
 # 编译安装
 ```
 git clone https://github.com/xiaoqidun/gitcz.git
