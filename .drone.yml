@@ -12,6 +12,7 @@ steps:
     pull: if-not-exists
     image: xiaoqidun/goenv
     commands:
+      - chmod +x build.sh
       - ./ build.sh
   - name: upload
     image: xiaoqidun/gocos
