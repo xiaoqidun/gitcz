@@ -10,11 +10,11 @@ steps:
       - build -f build.sh -i gitcz.go -o release/gitcz
   - name: build
     pull: if-not-exists
-    image: xiaoqidun/goenv
+    image: hkccr.ccs.tencentyun.com/xiaoqidun/goenv
     commands:
       - ./build.sh
   - name: upload
-    image: xiaoqidun/gocos
+    image: hkccr.ccs.tencentyun.com/xiaoqidun/gocos
     settings:
       secret_id:
         from_secret: cos_secret_id
