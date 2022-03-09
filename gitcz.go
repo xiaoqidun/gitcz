@@ -19,19 +19,23 @@ type CzType struct {
 }
 
 type CzCommit struct {
-	Type    *CzType
-	Scope   *string
-	Subject *string
-	Body    *string
-	Footer  *string
+	Type           *CzType
+	Scope          *string
+	Subject        *string
+	Body           *string
+	BreakingChange *string
+	Closes         *string
 }
 
 var StdinInput = bufio.NewReader(os.Stdin)
 
 var (
-	InputTypePrompt    = "选择或输入一个提交类型(必填): "
-	InputScopePrompt   = "说明本次提交的影响范围(必填): "
-	InputSubjectPrompt = "对本次提交进行简短描述(必填): "
+	InputTypePrompt           = "选择或输入一个提交类型(必填): "
+	InputScopePrompt          = "说明本次提交的影响范围(必填): "
+	InputSubjectPrompt        = "对本次提交进行简短描述(必填): "
+	InputBodyPrompt           = "对本次提交进行完整描述(选填): "
+	InputBreakingChangePrompt = "如果当前代码版本与上一版本不兼容,对变动、变动的理由及迁移的方法进行描述(选填): "
+	InputClosesPrompt         = "如果本次提交针对某个issue,列出关闭的issues(选填): "
 )
 
 var CzTypeList = []CzType{
@@ -89,6 +93,9 @@ func main() {
 	czCommit.Type = InputType()
 	czCommit.Scope = InputScope()
 	czCommit.Subject = InputSubject()
+	czCommit.Body = InputBody()
+	czCommit.BreakingChange = InputBreakingChange()
+	czCommit.Closes = InputCloses()
 	commit := GenerateCommit(czCommit)
 	if err := GitCommit(commit, *amend); err != nil {
 		log.Println(err)
@@ -154,6 +161,7 @@ func InputType() *CzType {
 			return &CzTypeList[i]
 		}
 	}
+	NewLine()
 	return InputType()
 }
 
@@ -165,6 +173,7 @@ func InputScope() *string {
 		NewLine()
 		return &text
 	}
+	NewLine()
 	return InputScope()
 }
 
@@ -176,22 +185,62 @@ func InputSubject() *string {
 		NewLine()
 		return &text
 	}
-	return InputScope()
+	NewLine()
+	return InputSubject()
+}
+
+func InputBody() *string {
+	fmt.Print(InputBodyPrompt)
+	text, _ := StdinInput.ReadString('\n')
+	text = strings.TrimSpace(text)
+	if text != "" {
+		NewLine()
+		return &text
+	}
+	NewLine()
+	return nil
+}
+
+func InputBreakingChange() *string {
+	fmt.Print(InputBreakingChangePrompt)
+	text, _ := StdinInput.ReadString('\n')
+	text = strings.TrimSpace(text)
+	if text != "" {
+		NewLine()
+		return &text
+	}
+	NewLine()
+	return nil
+}
+
+func InputCloses() *string {
+	fmt.Print(InputClosesPrompt)
+	text, _ := StdinInput.ReadString('\n')
+	text = strings.TrimSpace(text)
+	if text != "" {
+		NewLine()
+		return &text
+	}
+	return nil
 }
 
 func GenerateCommit(czCommit *CzCommit) string {
 	commit := fmt.Sprintf(
-		"%s(%s): %s\n",
+		"%s(%s): %s\n\n",
 		czCommit.Type.Type,
 		*czCommit.Scope,
 		*czCommit.Subject,
 	)
 	if czCommit.Body != nil {
 		commit += *czCommit.Body
+		commit += "\n\n"
 	}
-	commit += "\n"
-	if czCommit.Footer != nil {
-		commit += *czCommit.Footer
+	if czCommit.BreakingChange != nil {
+		commit += ("BREAKING CHANGE: " + *czCommit.BreakingChange)
+		commit += "\n\n"
+	}
+	if czCommit.Closes != nil {
+		commit += ("Closes fix " + *czCommit.Closes)
 	}
 	return commit
 }
