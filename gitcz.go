@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -98,7 +97,7 @@ func main() {
 	czCommit.Closes = InputCloses()
 	commit := GenerateCommit(czCommit)
 	if err := GitCommit(commit, *amend); err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 }
 
@@ -221,6 +220,7 @@ func InputCloses() *string {
 		NewLine()
 		return &text
 	}
+	NewLine()
 	return nil
 }
 
