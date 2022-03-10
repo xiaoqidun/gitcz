@@ -236,11 +236,11 @@ func GenerateCommit(czCommit *CzCommit) string {
 		commit += "\n\n"
 	}
 	if czCommit.BreakingChange != nil {
-		commit += ("BREAKING CHANGE: " + *czCommit.BreakingChange)
+		commit += "BREAKING CHANGE: " + *czCommit.BreakingChange
 		commit += "\n\n"
 	}
 	if czCommit.Closes != nil {
-		commit += ("Closes fix " + *czCommit.Closes)
+		commit += "Closes fix " + *czCommit.Closes
 	}
 	return commit
 }
