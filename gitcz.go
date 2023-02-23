@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -116,7 +115,7 @@ func NewLine() {
 }
 
 func GitCommit(commit string, amend bool, sign bool) (err error) {
-	tempFile, err := ioutil.TempFile("", "git_commit_")
+	tempFile, err := os.CreateTemp("", "git_commit_")
 	if err != nil {
 		return
 	}
