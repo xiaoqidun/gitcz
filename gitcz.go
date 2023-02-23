@@ -78,6 +78,7 @@ func main() {
 		false,
 		"覆盖上次提交信息",
 	)
+	sign := flag.Bool("S", false, "对commit进行签名")
 	author := flag.Bool(
 		"author",
 		false,
@@ -96,7 +97,7 @@ func main() {
 	czCommit.BreakingChange = InputBreakingChange()
 	czCommit.Closes = InputCloses()
 	commit := GenerateCommit(czCommit)
-	if err := GitCommit(commit, *amend); err != nil {
+	if err := GitCommit(commit, *amend, *sign); err != nil {
 		fmt.Println(err)
 	}
 }
@@ -114,7 +115,7 @@ func NewLine() {
 	fmt.Println()
 }
 
-func GitCommit(commit string, amend bool) (err error) {
+func GitCommit(commit string, amend bool, sign bool) (err error) {
 	tempFile, err := ioutil.TempFile("", "git_commit_")
 	if err != nil {
 		return
@@ -129,6 +130,9 @@ func GitCommit(commit string, amend bool) (err error) {
 	args := []string{"commit"}
 	if amend {
 		args = append(args, "--amend")
+	}
+	if sign {
+		args = append(args, "-S")
 	}
 	args = append(args, "-F", tempFile.Name())
 	cmd := exec.Command("git", args...)
