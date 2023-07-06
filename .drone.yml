@@ -2,19 +2,22 @@ kind: pipeline
 type: docker
 name: default
 
+node:
+  region: cn
+
 steps:
   - name: generate
     pull: if-not-exists
-    image: hkccr.ccs.tencentyun.com/xiaoqidun/build
+    image: ccr.ccs.tencentyun.com/xiaoqidun/build
     commands:
       - build -f build.sh -i gitcz.go -o release/gitcz
   - name: build
     pull: if-not-exists
-    image: hkccr.ccs.tencentyun.com/xiaoqidun/goenv
+    image: ccr.ccs.tencentyun.com/xiaoqidun/goenv
     commands:
       - ./build.sh
   - name: upload
-    image: hkccr.ccs.tencentyun.com/xiaoqidun/gocos
+    image: ccr.ccs.tencentyun.com/xiaoqidun/gocos
     settings:
       secret_id:
         from_secret: cos_secret_id
