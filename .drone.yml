@@ -28,6 +28,3 @@ steps:
       source: release/
       target: product/gitcz
       strip_prefix: release/
-
-image_pull_secrets:
-  - docker_config_ccr
