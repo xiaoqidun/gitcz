@@ -1,6 +1,6 @@
 # gitcz
 
-Golang 版本 Git Commitizen，commit 规范工具
+Go语言Git Commitizen，commit规范工具
 
 # 快速安装
 
