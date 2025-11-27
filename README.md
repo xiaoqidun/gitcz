@@ -37,5 +37,4 @@ git push
 
 # 规范文档
 
-gitcz
-使用：[angular git commit 规范](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines)
+gitcz 使用 [angular git commit](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) 规范
