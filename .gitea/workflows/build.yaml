@@ -1,0 +1,28 @@
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: cn
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: generate
+        uses: docker://ccr.ccs.tencentyun.com/xiaoqidun/build:latest
+        with:
+          args: -f build.sh -i gitcz.go -o release/gitcz
+      - name: docker goenv
+        uses: docker://ccr.ccs.tencentyun.com/xiaoqidun/goenv:latest
+        env:
+          GIT_SERVER: ${{ secrets.git_server }}
+          GIT_USER: ${{ secrets.git_user }}
+          GIT_TOKEN: ${{ secrets.git_token }}
+        with:
+          args: bash build.sh
+      - name: upload to cos
+        uses: docker://ccr.ccs.tencentyun.com/xiaoqidun/gocos
+        env:
+          PLUGIN_SECRET_ID: ${{secrets.cos_secret_id}}
+          PLUGIN_SECRET_KEY: ${{secrets.cos_secret_key}}
+          PLUGIN_BUCKET_URL: ${{secrets.cos_bucket_url}}
+          PLUGIN_SOURCE: release/
+          PLUGIN_TARGET: product/gitcz
+          PLUGIN_STRIP_PREFIX: release/
