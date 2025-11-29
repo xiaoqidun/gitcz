@@ -18,7 +18,7 @@ jobs:
         with:
           args: bash build.sh
       - name: upload to cos
-        uses: docker://ccr.ccs.tencentyun.com/xiaoqidun/gocos
+        uses: docker://ccr.ccs.tencentyun.com/xiaoqidun/gocos:latest
         env:
           PLUGIN_SECRET_ID: ${{secrets.cos_secret_id}}
           PLUGIN_SECRET_KEY: ${{secrets.cos_secret_key}}
